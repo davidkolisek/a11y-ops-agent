@@ -1,5 +1,5 @@
 /**
- * Shared domain types for a11y-ops-agent.
+ * Shared domain types for a11y-agent-ops.
  * Scanning payloads will be expanded as crawler/scanner land.
  */
 

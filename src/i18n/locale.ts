@@ -70,7 +70,7 @@ export interface AiStrings {
 const EN_REPORT: ReportStrings = {
   htmlLang: 'en',
   dateLocale: 'en-GB',
-  reportDocumentTitle: 'a11y-ops-agent report',
+  reportDocumentTitle: 'a11y-agent-ops report',
   accessibilityReport: 'Accessibility report',
   accessibilityScore: 'Accessibility score',
   target: 'Target',
@@ -100,7 +100,7 @@ const EN_REPORT: ReportStrings = {
 const SK_REPORT: ReportStrings = {
   htmlLang: 'sk',
   dateLocale: 'sk-SK',
-  reportDocumentTitle: 'a11y-ops-agent report',
+  reportDocumentTitle: 'a11y-agent-ops report',
   accessibilityReport: 'Report prístupnosti',
   accessibilityScore: 'Skóre prístupnosti',
   target: 'Cieľ',

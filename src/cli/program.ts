@@ -6,7 +6,7 @@ export function createProgram(): Command {
   const program = new Command();
 
   program
-    .name('a11y-ops-agent')
+    .name('a11y-ops')
     .description(
       'Framework-independent accessibility auditing CLI — crawl, axe-core scan, screenshots, AI analysis, tasks & HTML report',
     )

@@ -1,10 +1,11 @@
 {
-  "name": "a11y-ops-agent",
+  "name": "a11y-agent-ops",
   "version": "0.2.0",
   "description": "Framework-independent accessibility auditing CLI for any website or web application",
   "type": "module",
   "bin": {
-    "a11y-ops-agent": "./dist/cli/index.js"
+    "a11y-ops": "./dist/cli/index.js",
+    "a11y-agent-ops": "./dist/cli/index.js"
   },
   "main": "./dist/cli/index.js",
   "files": [
