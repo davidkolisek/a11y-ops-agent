@@ -1,13 +1,10 @@
-import { execFile } from 'node:child_process';
 import path from 'node:path';
-import { promisify } from 'node:util';
 
 import clipboard from 'clipboardy';
 import open from 'open';
 
 import { blank, log } from './logger.js';
-
-const execFileAsync = promisify(execFile);
+import { revealFile } from './open-path.js';
 
 /**
  * Post-scan developer UX: announce finished report, open it, then run an
@@ -113,18 +110,7 @@ async function openReport(reportPath: string): Promise<void> {
  */
 async function openReportFolder(reportPath: string, reportDir: string): Promise<void> {
   try {
-    if (process.platform === 'darwin') {
-      await execFileAsync('open', ['-R', reportPath]);
-      return;
-    }
-
-    if (process.platform === 'win32') {
-      // `/select,` highlights the file; Explorer often exits non-zero even on success.
-      await execFileAsync('explorer', [`/select,${reportPath}`]).catch(() => undefined);
-      return;
-    }
-
-    await execFileAsync('xdg-open', [reportDir]);
+    await revealFile(reportPath, reportDir);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     log(`✗ Could not open report folder: ${message}`);

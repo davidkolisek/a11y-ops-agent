@@ -36,6 +36,14 @@ npx a11y-agent-ops scan https://example.com
 
 Vyžaduje Node.js 18+.
 
+Po inštalácii uvidíš krátky tip. Potom:
+
+```bash
+a11y-ops setup
+```
+
+Vytvorí `~/.a11y-ops/` (`.env` + config), vypíše cesty a otvorí priečinok vo Finderi / Exploreri.
+
 ---
 
 ## Rýchly štart
@@ -83,7 +91,13 @@ Priorita: **CLI flagy > project config > global config > built-in defaulty**.
 
 AI je voliteľné. Bez kľúča stále dostaneš plný audit (skóre, screenshoty, úlohy). S kľúčom sú vysvetlenia a opravy lepšie.
 
-**Odporúčané pri globálnej inštalácii** — vytvor `~/.a11y-ops/.env`:
+**Odporúčané pre globálnu inštaláciu** — spusti:
+
+```bash
+a11y-ops setup
+```
+
+Alebo ručne vytvor `~/.a11y-ops/.env`:
 
 ```bash
 mkdir -p ~/.a11y-ops

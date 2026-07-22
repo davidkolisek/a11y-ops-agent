@@ -4,7 +4,15 @@ AI is **optional**. The crawl, axe-core scan, screenshots, HTML report, and Mark
 
 ## Where to put the API key
 
-For a **global CLI** install, create once:
+For a **global CLI** install, run once:
+
+```bash
+a11y-ops setup
+```
+
+This creates `~/.a11y-ops/`, writes a starter `.env` + `a11y-ops.config.ts`, and opens the folder.
+
+Or create the env file yourself:
 
 ```bash
 mkdir -p ~/.a11y-ops

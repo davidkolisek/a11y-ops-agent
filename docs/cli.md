@@ -3,6 +3,8 @@
 ## Commands
 
 ```bash
+a11y-ops setup              # create ~/.a11y-ops (.env + config) and open the folder
+a11y-ops setup --no-open    # same, but don't open the file manager
 a11y-ops scan <url> [options]
 ```
 

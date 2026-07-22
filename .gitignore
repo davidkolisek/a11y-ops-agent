@@ -9,3 +9,4 @@ coverage/
 .a11y-ops-report/
 reports/
 screenshots/
+/.idea/

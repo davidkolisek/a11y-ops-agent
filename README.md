@@ -36,6 +36,14 @@ npx a11y-agent-ops scan https://example.com
 
 Requires Node.js 18+.
 
+After install you should see a short tip. Then run:
+
+```bash
+a11y-ops setup
+```
+
+That creates `~/.a11y-ops/` (`.env` + config), prints the paths, and opens the folder in Finder / Explorer.
+
 ---
 
 ## Quick Start
@@ -83,7 +91,13 @@ Precedence: **CLI flags > project config > global config > built-in defaults**.
 
 AI is optional. Without a key you still get the full audit (score, screenshots, tasks). With a key, explanations and fixes get smarter.
 
-**Recommended for a global install** — create `~/.a11y-ops/.env`:
+**Recommended for a global install** — run:
+
+```bash
+a11y-ops setup
+```
+
+Or create `~/.a11y-ops/.env` yourself:
 
 ```bash
 mkdir -p ~/.a11y-ops
