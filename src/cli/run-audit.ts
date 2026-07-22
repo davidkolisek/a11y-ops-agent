@@ -144,22 +144,11 @@ export async function runAccessibilityAudit(options: AuditOptions): Promise<Audi
       config,
     );
 
-    blank();
-    log('Final output:');
-    blank();
-    log('Report:');
-    log(toDisplayPath(reportPath));
-    blank();
-    blank();
-    log('Tasks:');
-    log(`${toDisplayPath(config.tasksDir)}/`);
-    blank();
-
     return {
       targetUrl,
       pagesFound: crawlResult.pages.length,
       issuesFound,
-      reportPath,
+      reportPath: path.resolve(reportPath),
       tasksDir: path.resolve(config.tasksDir),
       projectSlug,
       aiRan: aiMode !== 'off' && isAiConfigured() && issuesFound > 0,

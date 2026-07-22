@@ -1,6 +1,6 @@
 {
   "name": "a11y-agent-ops",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Framework-independent accessibility auditing CLI for any website or web application",
   "type": "module",
   "bin": {
@@ -20,6 +20,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -31,6 +34,14 @@
     "wcag",
     "audit"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidkolisek/a11y-agent-ops.git"
+  },
+  "homepage": "https://github.com/davidkolisek/a11y-agent-ops#readme",
+  "bugs": {
+    "url": "https://github.com/davidkolisek/a11y-agent-ops/issues"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18"
@@ -38,8 +49,10 @@
   "dependencies": {
     "@axe-core/playwright": "^4.10.1",
     "axe-core": "^4.10.3",
+    "clipboardy": "^5.3.1",
     "commander": "^13.1.0",
     "jiti": "^2.7.0",
+    "open": "^11.0.0",
     "playwright": "^1.51.0",
     "zod": "^3.24.2"
   },

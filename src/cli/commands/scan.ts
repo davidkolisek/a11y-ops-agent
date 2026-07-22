@@ -1,6 +1,7 @@
 import { Command, Option, type Command as CommanderCommand } from 'commander';
 
 import { isWcagLevel, type WcagLevel } from '../../scanner/index.js';
+import { presentPostScanExperience } from '../post-scan.js';
 import { runAccessibilityAudit, type AuditOptions } from '../run-audit.js';
 
 interface ScanCommandOptions {
@@ -62,7 +63,8 @@ export function createScanCommand(): Command {
         ...(options.verbose ? { verbose: true } : {}),
       };
 
-      await runAccessibilityAudit(auditOptions);
+      const result = await runAccessibilityAudit(auditOptions);
+      await presentPostScanExperience(result.reportPath);
     });
 }
 
