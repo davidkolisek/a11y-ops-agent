@@ -1,6 +1,34 @@
 # Configuration
 
-Create `a11y-ops.config.ts` in your project root. It is loaded automatically.
+Two layers — use one or both.
+
+## Precedence
+
+**CLI flags > project config > global config > built-in defaults**
+
+## Global config (`~/.a11y-ops/`)
+
+Best fit for a global CLI install (`npm i -g`). Applies to every scan from any directory.
+
+```bash
+mkdir -p ~/.a11y-ops
+```
+
+`~/.a11y-ops/a11y-ops.config.ts`:
+
+```ts
+export default {
+  maxPages: 50,
+  wcagLevel: 'AA',
+  ai: { enabled: true },
+};
+```
+
+Also: `.js`, `.mjs`, `.cjs`, `.json`.
+
+## Project config (cwd)
+
+Best fit when auditing a specific app in its repository. Create `a11y-ops.config.ts` in the project root — loaded automatically from the current working directory.
 
 ```ts
 export default {
@@ -16,7 +44,7 @@ export default {
 };
 ```
 
-Also supported: `a11y-ops.config.js`, `.mjs`, `.cjs`, `.json`.
+Or pass an explicit file: `--config ./path/to/config.ts`.
 
 ## Options
 
@@ -32,3 +60,7 @@ Also supported: `a11y-ops.config.js`, `.mjs`, `.cjs`, `.json`.
 | `reportsDir` / `screenshotsDir` / `tasksDir` | Custom output paths (skips auto per-project nesting when set) |
 
 CLI flags override config when provided. See [CLI](cli.md).
+
+## AI keys
+
+See [AI](ai.md) — typically `~/.a11y-ops/.env` for global use.

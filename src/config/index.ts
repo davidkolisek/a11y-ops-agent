@@ -16,3 +16,5 @@ export {
   CONFIG_FILENAMES,
   type LoadedProjectConfig,
 } from './load-file.js';
+export { loadEnvFiles, parseEnv } from './load-env.js';
+export { getGlobalConfigDir, GLOBAL_CONFIG_DIRNAME } from './paths.js';

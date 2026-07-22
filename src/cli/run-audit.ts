@@ -100,8 +100,11 @@ export async function runAccessibilityAudit(options: AuditOptions): Promise<Audi
   const verbose = options.verbose === true;
 
   log('Starting accessibility audit...');
-  if (loaded.path) {
-    log(`Config: ${toDisplayPath(loaded.path)}`);
+  if (loaded.globalPath) {
+    log(`Global config: ${toDisplayPath(loaded.globalPath)}`);
+  }
+  if (loaded.projectPath) {
+    log(`Project config: ${toDisplayPath(loaded.projectPath)}`);
   }
   log(`Project: ${projectSlug}`);
   if (config.locale === 'sk') {

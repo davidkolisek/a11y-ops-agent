@@ -64,9 +64,75 @@ a11y-ops scan https://example.com --ai-mode off
 
 ---
 
+## Globálne CLI vs per-project
+
+Dva rôzne workflowy:
+
+| | Globálne CLI (`npm i -g`) | Per-project |
+| --- | --- | --- |
+| Kedy | Skenuješ URL odkiaľkoľvek | Audituješ jednu appku v jej repo |
+| AI kľúč | `~/.a11y-ops/.env` (raz) | to isté, alebo project `.env` |
+| Defaulty | `~/.a11y-ops/a11y-ops.config.ts` | voliteľné |
+| Nastavenia appky | CLI flagy | `a11y-ops.config.ts` v repo |
+
+Priorita: **CLI flagy > project config > global config > built-in defaulty**.
+
+---
+
+## AI setup (sprav raz)
+
+AI je voliteľné. Bez kľúča stále dostaneš plný audit (skóre, screenshoty, úlohy). S kľúčom sú vysvetlenia a opravy lepšie.
+
+**Odporúčané pri globálnej inštalácii** — vytvor `~/.a11y-ops/.env`:
+
+```bash
+mkdir -p ~/.a11y-ops
+cat > ~/.a11y-ops/.env << 'EOF'
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+# OPENAI_BASE_URL=https://api.openai.com/v1
+EOF
+```
+
+Potom z ľubovoľného priečinka:
+
+```bash
+a11y-ops scan https://example.com
+```
+
+Alternatívy:
+
+- export v shelli (`~/.zshrc`): `export OPENAI_API_KEY=sk-...`
+- project `.env` v aktuálnom pracovnom adresári
+
+| Režim | Správanie |
+| --- | --- |
+| `--ai-mode auto` (default) | AI beží, keď je kľúč dostupný |
+| `--ai-mode on` | AI je povinné (bez kľúča spadne) |
+| `--ai-mode off` | AI sa vždy preskočí |
+
+Funguje s OpenAI aj kompatibilnými endpointmi cez `OPENAI_BASE_URL`.
+
+---
+
 ## Konfigurácia
 
-V koreni projektu vytvor `a11y-ops.config.ts` — načíta sa automaticky.
+### Globálne defaulty (`~/.a11y-ops/`)
+
+Pre globálne CLI — defaulty pre každý sken:
+
+```bash
+# ~/.a11y-ops/a11y-ops.config.ts
+export default {
+  maxPages: 50,
+  wcagLevel: 'AA',
+  ai: { enabled: true },
+};
+```
+
+### Per-project (voliteľné)
+
+Keď `cd`neš do appky a chceš crawl pravidlá len pre ňu, daj do koreňa `a11y-ops.config.ts`:
 
 ```ts
 export default {
@@ -82,9 +148,7 @@ export default {
 };
 ```
 
-Podporované aj: `a11y-ops.config.js`, `.mjs`, `.cjs`, `.json`.
-
-CLI flagy majú prednosť pred config súborom.
+Podporované aj: `.js`, `.mjs`, `.cjs`, `.json`. Alebo `--config ./path/to/config.ts`.
 
 | Option | Popis |
 | --- | --- |
@@ -95,32 +159,6 @@ CLI flagy majú prednosť pred config súborom.
 | `locale` | `en` (default) alebo `sk` |
 | `projectName` | Priečinok pod `.a11y-ops-report/<name>/` |
 | `ai.enabled` | Zapnúť AI, keď je dostupný API kľúč |
-
-Detailne: [docs/configuration.md](https://github.com/davidkolisek/a11y-agent-ops/blob/master/docs/configuration.md)
-
----
-
-## AI (voliteľné)
-
-AI je voliteľné. Crawl, axe-core, screenshoty, HTML report a Markdown úlohy bežia vždy. AI len obohatí názvy, vysvetlenia a návrhy opráv.
-
-```bash
-export OPENAI_API_KEY=sk-...
-export OPENAI_MODEL=gpt-4o-mini          # voliteľné
-# export OPENAI_BASE_URL=https://...     # voliteľné (OpenAI-kompatibilné providery)
-
-a11y-ops scan https://example.com
-```
-
-| Režim | Správanie |
-| --- | --- |
-| `--ai-mode auto` (default) | AI beží, keď je nastavený `OPENAI_API_KEY` |
-| `--ai-mode on` | AI je povinné (bez kľúča spadne) |
-| `--ai-mode off` | AI sa vždy preskočí |
-
-Funguje s OpenAI aj kompatibilnými endpointmi (Azure OpenAI, OpenRouter, LiteLLM, lokálne gatewaye) cez `OPENAI_BASE_URL`.
-
-Detailne: [docs/ai.md](https://github.com/davidkolisek/a11y-agent-ops/blob/master/docs/ai.md)
 
 ---
 
@@ -133,9 +171,9 @@ Detailne: [docs/ai.md](https://github.com/davidkolisek/a11y-agent-ops/blob/maste
 └── tasks/          # Markdown tickety pre Jira / Linear / GitHub
 ```
 
-`<project>` je predvolene hostname cieľovej URL (prepíšeš cez `--project` alebo `projectName` v configu).
+Zapisuje sa relatívne k **aktuálnemu pracovnému adresáru**. `<project>` je predvolene hostname.
 
-Po skene sa report otvorí v prehliadači a CLI ostane bežať s malým menu (znova otvoriť / otvoriť priečinok / skopírovať cestu / ukončiť).
+Po skene sa report otvorí v prehliadači a CLI ostane bežať s malým menu.
 
 ---
 

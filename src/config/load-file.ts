@@ -4,7 +4,13 @@ import { pathToFileURL } from 'node:url';
 
 import { createJiti } from 'jiti';
 
-import { UserConfigSchema, type UserConfig } from './schema.js';
+import { loadEnvFiles } from './load-env.js';
+import { getGlobalConfigDir } from './paths.js';
+import {
+  AiConfigSchema,
+  UserConfigSchema,
+  type UserConfig,
+} from './schema.js';
 
 export const CONFIG_FILENAMES = [
   'a11y-ops.config.ts',
@@ -15,15 +21,27 @@ export const CONFIG_FILENAMES = [
   'a11y-ops.config.json',
 ] as const;
 
+/** Partial schema so file layers only override keys the user actually set. */
+const UserConfigPartialSchema = UserConfigSchema.partial().extend({
+  ai: AiConfigSchema.partial().optional(),
+});
+
 export interface LoadedProjectConfig {
-  /** Absolute path to the config file, or null when none was found */
+  /** Absolute path preferred for display (project config, else global). */
   path: string | null;
+  /** Global config file under `~/.a11y-ops/`, if any. */
+  globalPath: string | null;
+  /** Project config file in cwd (or explicit --config), if any. */
+  projectPath: string | null;
+  /** Merged config: defaults ← global ← project */
   config: UserConfig;
 }
 
 /**
- * Load `a11y-ops.config.*` from `cwd` (or an explicit path).
- * Missing file is OK — returns defaults.
+ * Load env files + config layers.
+ *
+ * Config precedence: defaults ← `~/.a11y-ops/a11y-ops.config.*` ← cwd config ← CLI
+ * Env: shell wins; then cwd `.env` overlays `~/.a11y-ops/.env` for unset keys.
  */
 export async function loadProjectConfig(
   options: {
@@ -32,36 +50,37 @@ export async function loadProjectConfig(
   } = {},
 ): Promise<LoadedProjectConfig> {
   const cwd = options.cwd ?? process.cwd();
-  const resolvedPath = options.configPath
+
+  await loadEnvFiles({ cwd });
+
+  const globalPath = await findConfigFile(getGlobalConfigDir());
+  const projectPath = options.configPath
     ? path.resolve(cwd, options.configPath)
     : await findConfigFile(cwd);
 
-  if (!resolvedPath) {
-    return {
-      path: null,
-      config: UserConfigSchema.parse({}),
-    };
-  }
+  const globalPartial = globalPath ? await loadPartialConfig(globalPath) : {};
+  const projectPartial = projectPath ? await loadPartialConfig(projectPath) : {};
 
-  const raw = await importConfigModule(resolvedPath);
-  const parsed = UserConfigSchema.safeParse(normalizeConfigExport(raw));
-
-  if (!parsed.success) {
-    const details = parsed.error.issues
-      .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
-      .join('; ');
-    throw new Error(`Invalid config in ${resolvedPath}: ${details}`);
-  }
+  const config = UserConfigSchema.parse({
+    ...globalPartial,
+    ...projectPartial,
+    ai: {
+      ...(globalPartial.ai ?? {}),
+      ...(projectPartial.ai ?? {}),
+    },
+  });
 
   return {
-    path: resolvedPath,
-    config: parsed.data,
+    path: projectPath ?? globalPath,
+    globalPath,
+    projectPath,
+    config,
   };
 }
 
-export async function findConfigFile(cwd: string): Promise<string | null> {
+export async function findConfigFile(dir: string): Promise<string | null> {
   for (const name of CONFIG_FILENAMES) {
-    const candidate = path.join(cwd, name);
+    const candidate = path.join(dir, name);
     try {
       await access(candidate);
       return candidate;
@@ -70,6 +89,20 @@ export async function findConfigFile(cwd: string): Promise<string | null> {
     }
   }
   return null;
+}
+
+async function loadPartialConfig(resolvedPath: string): Promise<Partial<UserConfig>> {
+  const raw = await importConfigModule(resolvedPath);
+  const parsed = UserConfigPartialSchema.safeParse(normalizeConfigExport(raw));
+
+  if (!parsed.success) {
+    const details = parsed.error.issues
+      .map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
+      .join('; ');
+    throw new Error(`Invalid config in ${resolvedPath}: ${details}`);
+  }
+
+  return parsed.data as Partial<UserConfig>;
 }
 
 async function importConfigModule(filePath: string): Promise<unknown> {
@@ -82,7 +115,6 @@ async function importConfigModule(filePath: string): Promise<unknown> {
     return (module as { default?: unknown }).default ?? module;
   }
 
-  // TS / ESM / CJS via jiti (supports a11y-ops.config.ts out of the box)
   const jiti = createJiti(import.meta.url, {
     interopDefault: true,
   });

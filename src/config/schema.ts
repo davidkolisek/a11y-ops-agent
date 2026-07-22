@@ -55,8 +55,9 @@ export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
 }
 
 /**
- * Resolve final config: defaults ← file config ← CLI overrides.
- * Only keys present in `cliOverrides` replace file values.
+ * Resolve final config: defaults ← base (file/global) ← overrides (project/CLI).
+ * Only keys present in `cliOverrides` replace previous values when used for CLI;
+ * for full layer merges, pass complete partial objects.
  */
 export function mergeConfig(
   fileConfig: Partial<UserConfig> | undefined,

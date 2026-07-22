@@ -64,9 +64,75 @@ a11y-ops scan https://example.com --ai-mode off
 
 ---
 
+## Global CLI vs per-project
+
+Two different workflows — pick what fits:
+
+| | Global CLI (`npm i -g`) | Per-project |
+| --- | --- | --- |
+| When | You scan any URL from anywhere | You audit one app in its repo |
+| AI key | `~/.a11y-ops/.env` (once) | same, or project `.env` |
+| Defaults | `~/.a11y-ops/a11y-ops.config.ts` | optional |
+| App-specific settings | CLI flags | `a11y-ops.config.ts` in the repo |
+
+Precedence: **CLI flags > project config > global config > built-in defaults**.
+
+---
+
+## AI setup (do this once)
+
+AI is optional. Without a key you still get the full audit (score, screenshots, tasks). With a key, explanations and fixes get smarter.
+
+**Recommended for a global install** — create `~/.a11y-ops/.env`:
+
+```bash
+mkdir -p ~/.a11y-ops
+cat > ~/.a11y-ops/.env << 'EOF'
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+# OPENAI_BASE_URL=https://api.openai.com/v1
+EOF
+```
+
+Then from any directory:
+
+```bash
+a11y-ops scan https://example.com
+```
+
+Alternatives:
+
+- export in your shell (`~/.zshrc`): `export OPENAI_API_KEY=sk-...`
+- project `.env` in the current working directory (overrides global `.env` for unset shell vars)
+
+| Mode | Behavior |
+| --- | --- |
+| `--ai-mode auto` (default) | Run AI when a key is available |
+| `--ai-mode on` | Require AI (fails without a key) |
+| `--ai-mode off` | Always skip AI |
+
+Works with OpenAI and compatible endpoints (Azure OpenAI, OpenRouter, LiteLLM, local gateways) via `OPENAI_BASE_URL`.
+
+---
+
 ## Configuration
 
-Create `a11y-ops.config.ts` in your project root — it loads automatically.
+### Global defaults (`~/.a11y-ops/`)
+
+For a global CLI — defaults that apply to every scan:
+
+```bash
+# ~/.a11y-ops/a11y-ops.config.ts
+export default {
+  maxPages: 50,
+  wcagLevel: 'AA',
+  ai: { enabled: true },
+};
+```
+
+### Per-project (optional)
+
+When you `cd` into an app repo and want crawl rules for that app only, add `a11y-ops.config.ts` in the project root:
 
 ```ts
 export default {
@@ -82,9 +148,7 @@ export default {
 };
 ```
 
-Also supported: `a11y-ops.config.js`, `.mjs`, `.cjs`, `.json`.
-
-CLI flags override the config file.
+Also supported: `.js`, `.mjs`, `.cjs`, `.json`. Or pass `--config ./path/to/config.ts`.
 
 | Option | Description |
 | --- | --- |
@@ -95,32 +159,6 @@ CLI flags override the config file.
 | `locale` | `en` (default) or `sk` |
 | `projectName` | Folder under `.a11y-ops-report/<name>/` |
 | `ai.enabled` | Enable AI when an API key is available |
-
-Full details: [docs/configuration.md](https://github.com/davidkolisek/a11y-agent-ops/blob/master/docs/configuration.md)
-
----
-
-## AI (optional)
-
-AI is optional. Crawl, axe-core, screenshots, HTML report, and Markdown tasks always run. AI only enriches titles, explanations, and fix suggestions.
-
-```bash
-export OPENAI_API_KEY=sk-...
-export OPENAI_MODEL=gpt-4o-mini          # optional
-# export OPENAI_BASE_URL=https://...     # optional (OpenAI-compatible providers)
-
-a11y-ops scan https://example.com
-```
-
-| Mode | Behavior |
-| --- | --- |
-| `--ai-mode auto` (default) | Run AI when `OPENAI_API_KEY` is set |
-| `--ai-mode on` | Require AI (fails without a key) |
-| `--ai-mode off` | Always skip AI |
-
-Works with OpenAI and compatible endpoints (Azure OpenAI, OpenRouter, LiteLLM, local gateways) via `OPENAI_BASE_URL`.
-
-Full details: [docs/ai.md](https://github.com/davidkolisek/a11y-agent-ops/blob/master/docs/ai.md)
 
 ---
 
@@ -133,7 +171,7 @@ Full details: [docs/ai.md](https://github.com/davidkolisek/a11y-agent-ops/blob/m
 └── tasks/          # Markdown tickets ready for Jira / Linear / GitHub
 ```
 
-`<project>` defaults to the target hostname (override with `--project` or `projectName` in config).
+Written relative to your **current working directory**. `<project>` defaults to the target hostname.
 
 After a scan, the report opens in your browser and the CLI stays open with a small menu (open again / open folder / copy path / quit).
 
