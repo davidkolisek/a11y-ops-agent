@@ -2,7 +2,8 @@ import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 
-import { scan } from '@a11y-agent-ops/engine'
+import chromium from '@sparticuz/chromium'
+import { configureBrowserLaunch, resetBrowserLaunchConfig, scan } from '@a11y-agent-ops/engine'
 import type { AccessibilityReport, AiMode, Locale, WcagLevel } from '@a11y-agent-ops/shared'
 
 import { embedScreenshotDataUrls } from './embedScreenshots.js'
@@ -37,6 +38,9 @@ interface NetlifyResult {
 const JSON_HEADERS = {
   'Content-Type': 'application/json; charset=utf-8',
 }
+
+/** Netlify sync functions are short-lived — keep crawl small. */
+const SERVERLESS_MAX_PAGES = 5
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -122,6 +126,29 @@ async function writeTempScanConfig(): Promise<string> {
   return configPath
 }
 
+function shouldUseServerlessChromium(): boolean {
+  // @sparticuz/chromium ships a Linux binary only (Netlify/AWS Lambda).
+  return process.platform === 'linux'
+}
+
+/**
+ * Playwright's bundled Chromium is not available in Netlify Functions.
+ * Use the stripped serverless binary from `@sparticuz/chromium`.
+ */
+async function prepareServerlessBrowser(): Promise<void> {
+  if (!shouldUseServerlessChromium()) {
+    return
+  }
+
+  // Prefer less GPU work in Lambda-like runtimes.
+  chromium.graphicsMode = false
+  configureBrowserLaunch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
+    headless: true,
+  })
+}
+
 export async function handler(event: NetlifyEvent): Promise<NetlifyResult> {
   const method = event.httpMethod ?? 'GET'
 
@@ -149,12 +176,17 @@ export async function handler(event: NetlifyEvent): Promise<NetlifyResult> {
   }
 
   try {
+    await prepareServerlessBrowser()
+
+    const requestedPages = body.cliOverrides?.maxPages ?? SERVERLESS_MAX_PAGES
+    const maxPages = Math.min(Math.max(1, requestedPages), SERVERLESS_MAX_PAGES)
+
     const configPath = await writeTempScanConfig()
     const report = await scan({
       url: targetUrl,
       configPath,
       cliOverrides: {
-        maxPages: body.cliOverrides?.maxPages ?? 10,
+        maxPages,
         aiMode: body.cliOverrides?.aiMode ?? 'off',
         ...(body.cliOverrides?.wcagLevel ? { wcagLevel: body.cliOverrides.wcagLevel } : {}),
         ...(body.cliOverrides?.locale ? { locale: body.cliOverrides.locale } : {}),
@@ -169,5 +201,7 @@ export async function handler(event: NetlifyEvent): Promise<NetlifyResult> {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     return json(500, { success: false, error: message })
+  } finally {
+    resetBrowserLaunchConfig()
   }
 }

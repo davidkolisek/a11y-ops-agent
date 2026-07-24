@@ -26,4 +26,4 @@ or
 { "success": false, "error": "message" }
 ```
 
-Uses `@a11y-agent-ops/engine` (Playwright). Local: `npm run dev:web`.
+Uses `@a11y-agent-ops/engine` + `@sparticuz/chromium` on Netlify (Playwright’s bundled browser is not available in Functions). Local `netlify dev` uses normal Playwright Chromium when not in a Lambda-like env.

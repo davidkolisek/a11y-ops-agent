@@ -1,5 +1,6 @@
-import { chromium, type Browser, type Page } from 'playwright';
+import { type Browser, type Page } from 'playwright';
 
+import { launchChromium } from '../browser/index.js';
 import { isPathAllowed } from './paths.js';
 import {
   CrawlError,
@@ -59,7 +60,7 @@ export async function crawlSite(options: CrawlOptions): Promise<CrawlResult> {
 
   try {
     try {
-      browser = await chromium.launch({ headless: true });
+      browser = await launchChromium({ headless: true });
     } catch (cause) {
       throw new CrawlError(
         'Failed to launch Chromium. Run `npx playwright install chromium` and try again.',

@@ -20,6 +20,14 @@ export type {
   AppConfig,
 } from '@a11y-agent-ops/shared';
 
+export {
+  configureBrowserLaunch,
+  getBrowserLaunchConfig,
+  launchChromium,
+  resetBrowserLaunchConfig,
+  type BrowserLaunchConfig,
+} from './browser/index.js';
+
 export { isWcagLevel, scanPages } from './scanner/index.js';
 export { crawlSite } from './crawler/index.js';
 export {

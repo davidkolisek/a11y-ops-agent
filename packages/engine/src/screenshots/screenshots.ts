@@ -1,8 +1,9 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 
-import { chromium, type Browser, type Page } from 'playwright';
+import { type Browser, type Page } from 'playwright';
 
+import { launchChromium } from '../browser/index.js';
 import type { PageScanResult } from '../scanner/types.js';
 import {
   DEFAULT_SCREENSHOTS_DIR,
@@ -46,7 +47,7 @@ export async function generateViolationScreenshot(
 
   try {
     try {
-      browser = await chromium.launch({ headless: true });
+      browser = await launchChromium({ headless: true });
     } catch (cause) {
       throw new ScreenshotError(
         'Failed to launch Chromium. Run `npx playwright install chromium` and try again.',
@@ -101,7 +102,7 @@ export async function captureViolationScreenshots(
 
   try {
     try {
-      browser = await chromium.launch({ headless: true });
+      browser = await launchChromium({ headless: true });
     } catch (cause) {
       throw new ScreenshotError(
         'Failed to launch Chromium. Run `npx playwright install chromium` and try again.',

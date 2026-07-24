@@ -1,7 +1,8 @@
 import { AxeBuilder } from '@axe-core/playwright';
 import type { Result as AxeViolation, NodeResult } from 'axe-core';
-import { chromium, type Browser, type Page } from 'playwright';
+import { type Browser, type Page } from 'playwright';
 
+import { launchChromium } from '../browser/index.js';
 import {
   ScanError,
   type AccessibilityViolation,
@@ -65,7 +66,7 @@ export async function scanPages(options: ScanPagesOptions): Promise<ScanRunResul
 
   try {
     try {
-      browser = await chromium.launch({ headless: true });
+      browser = await launchChromium({ headless: true });
     } catch (cause) {
       throw new ScanError(
         'Failed to launch Chromium. Run `npx playwright install chromium` and try again.',

@@ -25,7 +25,12 @@
     "@axe-core/playwright",
     "axe-core",
     "jiti",
+    "@sparticuz/chromium",
   ]
+
+[functions.scan]
+  timeout = 26
+  memory = 1024
 
 [[headers]]
   for = "/.netlify/functions/*"
