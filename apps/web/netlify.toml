@@ -32,6 +32,12 @@
   timeout = 26
   memory = 1024
 
+# Vue Router history mode — refresh/deep links must serve the SPA shell.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
