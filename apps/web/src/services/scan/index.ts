@@ -1,0 +1,5 @@
+export type { ScanClient, AccessibilityReport, ScanOptions, ScanProgressEvent } from './types'
+export { createScanClient } from './createScanClient'
+export { createHttpScanClient } from './httpScanClient'
+export { createMockScanClient } from './mockScanClient'
+export { createMockAccessibilityReport } from './mockReport'

@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #0b1220;
+  --color-ink-soft: #1a2438;
+  --color-muted: #5b677d;
+  --color-line: #e4e9f2;
+  --color-surface: #f5f7fb;
+  --color-surface-elevated: #ffffff;
+  --color-accent: #0e7c86;
+  --color-accent-strong: #0a5f67;
+  --color-accent-soft: #d8f3f5;
+
+  --shadow-soft: 0 1px 2px rgb(11 18 32 / 0.04), 0 6px 16px rgb(11 18 32 / 0.05);
+
+  --animate-fade-up: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 28%, white);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+/* Outfit display face (Syne extrabold at huge sizes looked horizontally crushed). */
+@utility font-display {
+  font-family: var(--font-heading);
+}

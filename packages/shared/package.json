@@ -1,0 +1,27 @@
+{
+  "name": "@a11y-agent-ops/shared",
+  "version": "0.3.4",
+  "description": "Shared TypeScript types for a11y-agent-ops",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true
+}

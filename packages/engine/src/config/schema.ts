@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { DEFAULT_LOCALE, LOCALES } from '../i18n/index.js';
+import { DEFAULT_LOCALE, LOCALES } from '@a11y-agent-ops/shared';
 
 export const DEFAULT_REPORT_ROOT = '.a11y-ops-report';
 

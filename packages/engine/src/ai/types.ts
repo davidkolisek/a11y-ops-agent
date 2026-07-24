@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-import type { Locale } from '../i18n/index.js';
+import type { Locale } from '@a11y-agent-ops/shared';
+
 import type { AiTokenUsage } from './usage.js';
 
 /**

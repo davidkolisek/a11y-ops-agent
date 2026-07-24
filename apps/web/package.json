@@ -1,0 +1,29 @@
+{
+  "name": "@a11y-agent-ops/web",
+  "version": "0.3.4",
+  "private": true,
+  "type": "module",
+  "description": "Public web app for accessibility scanning",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc -b --pretty false"
+  },
+  "dependencies": {
+    "@a11y-agent-ops/shared": "*",
+    "pinia": "^4.0.2",
+    "vue": "^3.5.39",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^22.13.10",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/tsconfig": "^0.9.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.8.2",
+    "vite": "^8.1.1",
+    "vue-tsc": "^3.3.5"
+  }
+}

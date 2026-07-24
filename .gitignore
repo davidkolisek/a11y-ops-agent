@@ -1,8 +1,11 @@
 node_modules/
 dist/
+**/dist/
+**/vendor/
 coverage/
 *.log
 .DS_Store
+*.tsbuildinfo
 .env
 .env.*
 !.env.example
@@ -10,3 +13,8 @@ coverage/
 reports/
 screenshots/
 /.idea/
+*.tgz
+packages/cli/.package.json.prepack-backup
+
+# Local Netlify folder
+.netlify

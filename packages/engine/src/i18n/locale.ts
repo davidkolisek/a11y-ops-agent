@@ -1,12 +1,11 @@
-export const LOCALES = ['en', 'sk'] as const;
+export {
+  LOCALES,
+  DEFAULT_LOCALE,
+  isLocale,
+  type Locale,
+} from '@a11y-agent-ops/shared';
 
-export type Locale = (typeof LOCALES)[number];
-
-export const DEFAULT_LOCALE: Locale = 'en';
-
-export function isLocale(value: string): value is Locale {
-  return (LOCALES as readonly string[]).includes(value);
-}
+import type { Locale } from '@a11y-agent-ops/shared';
 
 export interface ReportStrings {
   htmlLang: string;

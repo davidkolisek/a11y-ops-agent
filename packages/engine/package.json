@@ -1,0 +1,39 @@
+{
+  "name": "@a11y-agent-ops/engine",
+  "version": "0.3.4",
+  "description": "Accessibility scanning engine for a11y-agent-ops",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@a11y-agent-ops/shared": "*",
+    "@axe-core/playwright": "^4.10.1",
+    "axe-core": "^4.10.3",
+    "jiti": "^2.7.0",
+    "playwright": "^1.51.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "typescript": "^5.8.2"
+  },
+  "private": true
+}

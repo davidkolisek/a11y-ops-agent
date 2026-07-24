@@ -201,6 +201,7 @@ A11yOps closes that gap — each finding becomes a copy/paste-ready task with se
 
 ## Docs
 
+- [Architecture](https://github.com/davidkolisek/a11y-agent-ops/blob/master/docs/architecture/README.md)
 - [Configuration](https://github.com/davidkolisek/a11y-agent-ops/blob/master/docs/configuration.md)
 - [CLI](https://github.com/davidkolisek/a11y-agent-ops/blob/master/docs/cli.md)
 - [AI](https://github.com/davidkolisek/a11y-agent-ops/blob/master/docs/ai.md)

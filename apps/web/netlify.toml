@@ -1,0 +1,31 @@
+# Used by `netlify dev --filter @a11y-agent-ops/web`
+
+[build]
+  command = "cd ../.. && npm run build:netlify"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[dev]
+  command = "npm run dev -w @a11y-agent-ops/web"
+  targetPort = 5173
+  port = 8888
+  framework = "#custom"
+  autoLaunch = false
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  external_node_modules = [
+    "playwright",
+    "playwright-core",
+    "@axe-core/playwright",
+    "axe-core",
+    "jiti",
+  ]
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
