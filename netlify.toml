@@ -5,6 +5,10 @@
   publish = "apps/web/dist"
   functions = "apps/web/netlify/functions"
 
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--include=optional"
+
 [dev]
   command = "npm run dev -w @a11y-agent-ops/web"
   targetPort = 5173
