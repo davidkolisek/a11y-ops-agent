@@ -11,7 +11,8 @@
   "scripts": {
     "build": "npm run build -w @a11y-agent-ops/shared && npm run build -w @a11y-agent-ops/engine && npm run build -w a11y-agent-ops",
     "build:web": "npm run build -w @a11y-agent-ops/web",
-    "build:netlify": "npm run build -w @a11y-agent-ops/shared && npm run build -w @a11y-agent-ops/engine && npm run build -w @a11y-agent-ops/web",
+    "build:netlify": "npm run ensure:linux-natives && npm run build -w @a11y-agent-ops/shared && npm run build -w @a11y-agent-ops/engine && npm run build -w @a11y-agent-ops/web",
+    "ensure:linux-natives": "node scripts/ensure-linux-natives.mjs",
     "build:all": "npm run build:netlify && npm run build -w a11y-agent-ops",
     "dev": "npm run dev -w a11y-agent-ops",
     "dev:web": "npm run build -w @a11y-agent-ops/shared && npm run build -w @a11y-agent-ops/engine && netlify dev --filter @a11y-agent-ops/web --offline",
