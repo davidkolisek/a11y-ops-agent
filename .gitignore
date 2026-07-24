@@ -10,8 +10,6 @@ coverage/
 .env.*
 !.env.example
 .a11y-ops-report/
-reports/
-screenshots/
 /.idea/
 *.tgz
 packages/cli/.package.json.prepack-backup
